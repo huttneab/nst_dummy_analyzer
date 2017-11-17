@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="mechanical_man.com.analyzerdummy.MainActivity"
+    tools:showIn="@layout/activity_main">
+
+    <ListView
+        android:id="@+id/log_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:stackFromBottom="true"
+        android:transcriptMode="alwaysScroll"
+        app:layout_constraintBottom_toTopOf="@id/button_panel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <GridLayout
+        android:id="@+id/button_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:columnCount="4"
+        app:layout_constraintBottom_toBottomOf="parent"
+        >
+
+
+        <Button
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_columnWeight="1"
+            android:text="button 6"
+            />
+
+        <Button
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_columnWeight="1"
+            android:text="pass"
+            />
+
+        <Button
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_columnWeight="1"
+            android:text="fail"
+            />
+
+        <Button
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_columnWeight="1"
+            android:text="button 4"
+            />
+
+        <Button
+            android:id="@+id/discovery"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_columnWeight="1"
+            android:backgroundTint="#69F0AE"
+            android:maxEms="6"
+            android:text="discovery"
+            />
+
+        <Button
+            android:id="@+id/start"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_columnWeight="1"
+            android:backgroundTint="#2979FF"
+            android:text="start"
+            />
+
+        <Button
+            android:id="@+id/stop"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_columnWeight="1"
+            android:backgroundTint="#2979FF"
+            android:text="stop"
+            />
+
+        <Button
+            android:id="@+id/clear"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_columnWeight="1"
+            android:backgroundTint="@color/colorPrimary"
+            android:text="Clear"
+            />
+
+
+    </GridLayout>
+</android.support.constraint.ConstraintLayout>
