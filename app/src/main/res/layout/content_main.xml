@@ -30,29 +30,20 @@
         >
 
 
-        <Button
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_columnWeight="1"
-            android:text="button 6"
+        <Spinner
+            android:id="@+id/result_spinner"
+            android:layout_columnSpan="2"
+            android:layout_columnWeight="2"
             />
 
         <Button
+            android:id="@+id/send"
+            android:layout_columnSpan="2"
             style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_columnWeight="1"
-            android:text="pass"
+            android:layout_columnWeight="2"
+            android:text="send"
             />
 
-        <Button
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_columnWeight="1"
-            android:text="fail"
-            />
-
-        <Button
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_columnWeight="1"
-            android:text="button 4"
-            />
 
         <Button
             android:id="@+id/discovery"

@@ -20,45 +20,45 @@ message Command {
 	optional PressureResult pressure_result = 7;
 
 	message FlowTest {
-		required int32 test_id = 1;
+		required int64 test_id = 1;
 	}
 
 	message ConcentrationTest {
-		required int32 test_id = 1;
+		required int64 test_id = 1;
 	}
 
 	message PressureTest {
-		required int32 test_id = 1;
+		required int64 test_id = 1;
 	}
 
 	message FlowResult {
-		required int32 test_id = 1;
+		required int64 test_id = 1;
 
 		required Gas expected_gas = 2;
 		required Gas detected_gas = 3;
 
-		required int32 flow_rate = 4;
-		required int32 flow_pressure = 5;
+		required double flow_rate = 4;
+		required double flow_pressure = 5;
 	}
 
 	message ConcentrationResult {
-		required int32 test_id = 1;
+		required int64 test_id = 1;
 
 		required Gas expected_gas = 2;
 		required Gas detected_gas = 3;
 
-		required int32 gas_concentration = 4;
+		required double gas_concentration = 4;
 
 	}
 
 	message PressureResult {
-		required int32 test_id = 1;
-		
+		required int64 test_id = 1;
+
 		required Gas expected_gas = 2;
 		required Gas detected_gas = 3;
 
-		required int32 static_pressure = 4;
-		required int32 pressure_drop = 5;
+		required double static_pressure = 4;
+		required double pressure_drop = 5;
 	}
 
 

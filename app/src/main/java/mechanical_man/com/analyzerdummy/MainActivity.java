@@ -12,19 +12,25 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
+
+import com.mechanical_man.nst_proto.NSTProtos;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import mechanical_man.com.analyzerdummy.util.EnumAdapter;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
     @BindView(R.id.log_view) ListView logView;
     @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.result_spinner) Spinner resultSpinner;
 
     private static final int REQUEST_ENABLE_BT = 3;
+    private long testId = 0;
 
     /**
      * Name of the connected device
@@ -65,6 +71,9 @@ public class MainActivity extends AppCompatActivity {
         if (mBluetoothAdapter == null) {
             Toast.makeText(this, "Bluetooth is not available", Toast.LENGTH_LONG).show();
         }
+
+        EnumAdapter<ResponseEnum> adapter = new EnumAdapter<>(this, ResponseEnum.class);
+        resultSpinner.setAdapter(adapter);
 
     }
 
@@ -155,6 +164,32 @@ public class MainActivity extends AppCompatActivity {
         bluetoothService.stop();
     }
 
+    @OnClick(R.id.send)
+    public void onClickSend(View v) {
+        NSTProtos.Command.Builder builder = NSTProtos.Command.newBuilder();
+
+
+        switch ((ResponseEnum) resultSpinner.getSelectedItem()) {
+            case FLOW:
+                builder.setType(NSTProtos.Command.Type.FLOW_RESULT)
+                        .setFlowResult(NSTProtos.Command.FlowResult.newBuilder()
+                                .setTestId(testId)
+                                .setDetectedGas(NSTProtos.Command.Gas.AIR)
+                                .setExpectedGas(NSTProtos.Command.Gas.AIR)
+                                .setFlowPressure(55.0)
+                                .setFlowRate(55.0)
+                                .build());
+                break;
+            case CONCENTRATION:
+                break;
+            case PRESSURE:
+                break;
+        }
+        NSTProtos.Command command = builder.build();
+        mConversationArrayAdapter.add("SEND " + command.getType().toString() + " for testID: " + testId);
+        bluetoothService.write(command);
+    }
+
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case REQUEST_ENABLE_BT:
@@ -203,10 +238,22 @@ public class MainActivity extends AppCompatActivity {
                     mConversationArrayAdapter.add(writeMessage);
                     break;
                 case Constants.MESSAGE_READ:
-                    byte[] readBuf = (byte[]) msg.obj;
+                    NSTProtos.Command command = (NSTProtos.Command) msg.obj;
+
+
+                    switch (command.getType()) {
+                        case FLOW_TEST:
+                            testId = command.getFlowTest().getTestId();
+                            break;
+                        case PRESSURE_TEST:
+                            break;
+                        case CONCENTRATION_TEST:
+                            break;
+
+                    }
                     // construct a string from the valid bytes in the buffer
-                    String readMessage = new String(readBuf, 0, msg.arg1);
-                    mConversationArrayAdapter.add(mConnectedDeviceName + ":  " + readMessage);
+                    mConversationArrayAdapter.add("RECEIVE " + command.getType().toString() + " for testID: " + testId);
+
                     break;
                 case Constants.MESSAGE_DEVICE_NAME:
                     // save the connected device's name

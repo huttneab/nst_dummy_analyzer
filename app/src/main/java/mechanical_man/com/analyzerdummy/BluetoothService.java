@@ -26,10 +26,12 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import com.mechanical_man.nst_proto.NSTProtos;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
 import java.util.UUID;
 
 /**
@@ -178,10 +180,9 @@ public class BluetoothService {
     /**
      * Write to the ConnectedThread in an unsynchronized manner
      *
-     * @param out The bytes to write
-     * @see ConnectedThread#write(byte[])
+     * @param command The command to write
      */
-    public void write(byte[] out) {
+    public void write(NSTProtos.Command command) {
         // Create temporary object
         ConnectedThread r;
         // Synchronize a copy of the ConnectedThread
@@ -190,7 +191,7 @@ public class BluetoothService {
             r = mConnectedThread;
         }
         // Perform the write unsynchronized
-        r.write(out);
+        r.write(command);
     }
 
     /**
@@ -348,17 +349,22 @@ public class BluetoothService {
 
         public void run() {
             Log.i(TAG, "BEGIN mConnectedThread");
-            byte[] buffer = new byte[1024];
-            int bytes;
 
             // Keep listening to the InputStream while connected
             while (mState == STATE_CONNECTED) {
                 try {
                     // Read from the InputStream
-                    bytes = mmInStream.read(buffer);
+                    byte[] msgSizeBuff = ByteBuffer.allocate(4).array();
+                    mmInStream.read(msgSizeBuff);
+                    int msgSize = ByteBuffer.wrap(msgSizeBuff).getInt();
+
+                    byte[] msgBuff = ByteBuffer.allocate(msgSize).array();
+
+                    mmInStream.read(msgBuff);
+                    NSTProtos.Command command = NSTProtos.Command.parseFrom(msgBuff);
 
                     // Send the obtained bytes to the UI Activity
-                    mHandler.obtainMessage(Constants.MESSAGE_READ, bytes, -1, buffer)
+                    mHandler.obtainMessage(Constants.MESSAGE_READ, command)
                             .sendToTarget();
                 } catch (IOException e) {
                     Log.e(TAG, "disconnected", e);
@@ -371,15 +377,17 @@ public class BluetoothService {
         /**
          * Write to the connected OutStream.
          *
-         * @param buffer The bytes to write
+         * @param command The command to write
          */
-        public void write(byte[] buffer) {
+        public void write(NSTProtos.Command command) {
             try {
-                mmOutStream.write(buffer);
 
-                // Share the sent message back to the UI Activity
-                mHandler.obtainMessage(Constants.MESSAGE_WRITE, -1, -1, buffer)
-                        .sendToTarget();
+                byte[] message = command.toByteArray();
+                //Since int occupies 4 bytes allocate a buffer of size 4
+                byte[] messageSize = ByteBuffer.allocate(4).putInt(message.length).array();
+                mmOutStream.write(messageSize);
+                mmOutStream.write(message);
+
             } catch (IOException e) {
                 Log.e(TAG, "Exception during write", e);
             }
