@@ -7,59 +7,116 @@ option java_package = "com.mechanical_man.nst_proto";
 option java_outer_classname = "NSTProtos";
 
 message Command {
-	enum Type { FLOW_TEST = 1; CONCENTRATION_TEST = 2; PRESSURE_TEST = 3; FLOW_RESULT = 4; CONCENTRATION_RESULT = 5; PRESSURE_RESULT = 6;}
-	enum Gas {O2 = 1; CO2 = 2; NO = 3; NO2 = 4; AIR = 5;}
+	enum Type {
+		GAS_TEST = 1;
+		STATIC_PRESSURE_TEST = 2;
+		FLOW_TEST = 3;
+		PRESSURE_DROP_TEST = 4;
+		TRANSIENT_FLOW_TEST = 5;
+		CONCENTRATION_TEST = 6;
+		GAS_RESULT = 7;
+		STATIC_PRESSURE_RESULT = 8;
+		FLOW_RESULT = 9;
+		PRESSURE_DROP_RESULT = 10;
+		TRANSIENT_FLOW_RESULT = 11;
+		CONCENTRATION_RESULT = 12;
+		CANCEL = 13;
+	}
+
+	enum Gas {
+		O2 = 1;
+		CO2 = 2;
+		NO = 3;
+		NO2 = 4;
+		AIR = 5;
+		VAC = 6;
+		WAGD = 7;
+	}
 
 	required Type type = 1;
 
-	optional FlowTest flow_test = 2;
-	optional ConcentrationResult concentration_test = 3;
-	optional PressureTest pressure_test = 4;
-	optional FlowResult flow_result = 5;
-	optional ConcentrationResult concentration_result = 6;
-	optional PressureResult pressure_result = 7;
+	optional GasTest gas_test = 2;
+	optional StaticPressureTest static_pressure_test = 3;
+	optional FlowTest flow_test = 4;
+	optional PressureDropTest pressure_test = 5;
+	optional TransientFlowTest transient_flow_test = 6;
+	optional ConcentrationResult concentration_test = 7;
+
+	optional GasResult gas_result = 8;
+	optional StaticPressureResult static_pressure_result = 9;
+	optional FlowResult flow_result = 10;
+	optional PressureDropResult pressure_drop_result = 11;
+	optional TransientFlowResult transient_flow_result = 12;
+	optional ConcentrationResult concentration_result = 13;
+	optional Cancel cancel = 14;
+
+	message GasTest {
+		required int64 test_id = 1;
+	}
+
+	message StaticPressureTest {
+		required int64 test_id = 1;
+	}
 
 	message FlowTest {
 		required int64 test_id = 1;
+
+		required double default_test_flow_lpm = 2;
+	}
+
+	message PressureDropTest {
+		required int64 test_id = 1;
+	}
+
+	message TransientFlowTest {
+		required int64 test_id = 1;
+
+		required double default_test_flow_lpm = 2;
 	}
 
 	message ConcentrationTest {
 		required int64 test_id = 1;
 	}
 
-	message PressureTest {
+	message GasResult {
 		required int64 test_id = 1;
+
+		required Gas expected_gas = 2;
+		required Gas detected_gas = 3;
+	}
+
+	message StaticPressureResult {
+		required int64 test_id = 1;
+
+		required double static_pressure = 2;
 	}
 
 	message FlowResult {
 		required int64 test_id = 1;
 
-		required Gas expected_gas = 2;
-		required Gas detected_gas = 3;
+		required double flow_rate = 2;
+		required double flow_pressure = 3;
+	}
 
-		required double flow_rate = 4;
-		required double flow_pressure = 5;
+	message PressureDropResult {
+		required int64 test_id = 1;
+
+		required double pressure_drop = 2;
+	}
+
+	message TransientFlowResult {
+		required int64 test_id = 1;
+
+		required double transient_flow = 2;
 	}
 
 	message ConcentrationResult {
 		required int64 test_id = 1;
 
-		required Gas expected_gas = 2;
-		required Gas detected_gas = 3;
-
-		required double gas_concentration = 4;
-
+		required double gas_concentration = 2;
 	}
 
-	message PressureResult {
-		required int64 test_id = 1;
-
-		required Gas expected_gas = 2;
-		required Gas detected_gas = 3;
-
-		required double static_pressure = 4;
-		required double pressure_drop = 5;
+	message Cancel {
 	}
-
 
 }

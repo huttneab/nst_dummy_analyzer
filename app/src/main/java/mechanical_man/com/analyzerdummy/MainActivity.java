@@ -16,11 +16,18 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.mechanical_man.nst_proto.NSTProtos;
+import com.mechanical_man.nst_proto.NSTProtos.Command.ConcentrationResult;
+import com.mechanical_man.nst_proto.NSTProtos.Command.FlowResult;
+import com.mechanical_man.nst_proto.NSTProtos.Command.PressureDropResult;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import mechanical_man.com.analyzerdummy.util.EnumAdapter;
+
+import static com.mechanical_man.nst_proto.NSTProtos.Command.Type.CONCENTRATION_RESULT;
+import static com.mechanical_man.nst_proto.NSTProtos.Command.Type.FLOW_RESULT;
+import static com.mechanical_man.nst_proto.NSTProtos.Command.Type.PRESSURE_DROP_RESULT;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -171,18 +178,26 @@ public class MainActivity extends AppCompatActivity {
 
         switch ((ResponseEnum) resultSpinner.getSelectedItem()) {
             case FLOW:
-                builder.setType(NSTProtos.Command.Type.FLOW_RESULT)
-                        .setFlowResult(NSTProtos.Command.FlowResult.newBuilder()
+                builder.setType(FLOW_RESULT)
+                        .setFlowResult(FlowResult.newBuilder()
                                 .setTestId(testId)
-                                .setDetectedGas(NSTProtos.Command.Gas.AIR)
-                                .setExpectedGas(NSTProtos.Command.Gas.AIR)
                                 .setFlowPressure(55.0)
                                 .setFlowRate(55.0)
                                 .build());
                 break;
             case CONCENTRATION:
+                builder.setType(CONCENTRATION_RESULT)
+                        .setConcentrationResult(ConcentrationResult.newBuilder()
+                                .setTestId(testId)
+                                .setGasConcentration(55.0)
+                                .build());
                 break;
             case PRESSURE:
+                builder.setType(PRESSURE_DROP_RESULT)
+                        .setPressureDropResult(PressureDropResult.newBuilder()
+                                .setTestId(testId)
+                                .setPressureDrop(55.0)
+                                .build());
                 break;
         }
         NSTProtos.Command command = builder.build();
@@ -245,7 +260,7 @@ public class MainActivity extends AppCompatActivity {
                         case FLOW_TEST:
                             testId = command.getFlowTest().getTestId();
                             break;
-                        case PRESSURE_TEST:
+                        case PRESSURE_DROP_TEST:
                             break;
                         case CONCENTRATION_TEST:
                             break;
