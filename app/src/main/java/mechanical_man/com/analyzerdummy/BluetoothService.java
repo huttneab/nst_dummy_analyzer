@@ -31,8 +31,9 @@ import com.mechanical_man.nst_proto.NSTProtos;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.ByteBuffer;
 import java.util.UUID;
+
+import mechanical_man.com.analyzerdummy.mock.MockAnalyzerService;
 
 /**
  * This class does all the work for setting up and managing Bluetooth
@@ -52,7 +53,7 @@ public class BluetoothService {
     private static final UUID MY_UUID_SECURE =
             UUID.fromString("fa87c0d0-afac-11de-8a39-0800200c9a66");
     private static final UUID MY_UUID_INSECURE =
-            UUID.fromString("8ce255c0-200a-11e0-ac64-0800200c9a66");
+            UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
     // Member fields
     private final BluetoothAdapter mAdapter;
@@ -68,6 +69,8 @@ public class BluetoothService {
     public static final int STATE_CONNECTING = 2; // now initiating an outgoing connection
     public static final int STATE_CONNECTED = 3;  // now connected to a remote device
 
+    private MockAnalyzerService mockAnalyzerService;
+
     /**
      * Constructor. Prepares a new BluetoothChat session.
      *
@@ -79,6 +82,8 @@ public class BluetoothService {
         mState = STATE_NONE;
         mNewState = mState;
         mHandler = handler;
+        mockAnalyzerService = MockAnalyzerService
+                .getInstance(context.getSharedPreferences("analyzer", Context.MODE_PRIVATE));
     }
 
     /**
@@ -353,19 +358,16 @@ public class BluetoothService {
             // Keep listening to the InputStream while connected
             while (mState == STATE_CONNECTED) {
                 try {
-                    // Read from the InputStream
-                    byte[] msgSizeBuff = ByteBuffer.allocate(4).array();
-                    mmInStream.read(msgSizeBuff);
-                    int msgSize = ByteBuffer.wrap(msgSizeBuff).getInt();
 
-                    byte[] msgBuff = ByteBuffer.allocate(msgSize).array();
-
-                    mmInStream.read(msgBuff);
-                    NSTProtos.Command command = NSTProtos.Command.parseFrom(msgBuff);
+                    NSTProtos.Command command = NSTProtos.Command.parseDelimitedFrom(mmInStream);
 
                     // Send the obtained bytes to the UI Activity
                     mHandler.obtainMessage(Constants.MESSAGE_READ, command)
                             .sendToTarget();
+
+                    // auto respond
+                    write(mockAnalyzerService.getResponseForCommand(command));
+
                 } catch (IOException e) {
                     Log.e(TAG, "disconnected", e);
                     connectionLost();
@@ -382,11 +384,12 @@ public class BluetoothService {
         public void write(NSTProtos.Command command) {
             try {
 
-                byte[] message = command.toByteArray();
+                command.writeDelimitedTo(mmOutStream);
+               /* byte[] message = command.toByteArray();
                 //Since int occupies 4 bytes allocate a buffer of size 4
                 byte[] messageSize = ByteBuffer.allocate(4).putInt(message.length).array();
                 mmOutStream.write(messageSize);
-                mmOutStream.write(message);
+                mmOutStream.write(message);*/
 
             } catch (IOException e) {
                 Log.e(TAG, "Exception during write", e);

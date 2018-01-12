@@ -16,18 +16,20 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.mechanical_man.nst_proto.NSTProtos;
+import com.mechanical_man.nst_proto.NSTProtos.Command.Cancel;
 import com.mechanical_man.nst_proto.NSTProtos.Command.ConcentrationResult;
 import com.mechanical_man.nst_proto.NSTProtos.Command.FlowResult;
+import com.mechanical_man.nst_proto.NSTProtos.Command.GasResult;
 import com.mechanical_man.nst_proto.NSTProtos.Command.PressureDropResult;
+import com.mechanical_man.nst_proto.NSTProtos.Command.StaticPressureResult;
+import com.mechanical_man.nst_proto.NSTProtos.Command.TransientFlowResult;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import mechanical_man.com.analyzerdummy.util.EnumAdapter;
 
-import static com.mechanical_man.nst_proto.NSTProtos.Command.Type.CONCENTRATION_RESULT;
-import static com.mechanical_man.nst_proto.NSTProtos.Command.Type.FLOW_RESULT;
-import static com.mechanical_man.nst_proto.NSTProtos.Command.Type.PRESSURE_DROP_RESULT;
+import static com.mechanical_man.nst_proto.NSTProtos.Command.Gas.N2;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -177,31 +179,70 @@ public class MainActivity extends AppCompatActivity {
 
 
         switch ((ResponseEnum) resultSpinner.getSelectedItem()) {
-            case FLOW:
-                builder.setType(FLOW_RESULT)
-                        .setFlowResult(FlowResult.newBuilder()
-                                .setTestId(testId)
-                                .setFlowPressure(55.0)
-                                .setFlowRate(55.0)
-                                .build());
+            case GAS_DETECTION:
+                builder.setGasResult(GasResult.newBuilder()
+                        .setTestId((int) testId)
+                        .setDetectedGas(N2)
+                        .setExpectedGas(N2)
+                        .build());
+                break;
+            case STATIC_PRESSURE:
+                builder.setStaticPressureResult(StaticPressureResult.newBuilder()
+                        .setTestId((int) testId)
+                        .setStaticPressure(55.0f)
+                        .build());
+
+                break;
+            case TRANSIENT_FLOW:
+                builder.setTransientFlowResult(TransientFlowResult.newBuilder()
+                        .setTestId((int) testId)
+                        .setTransientFlow(55.0f)
+                        .build());
+                break;
+            case FLOW_RATE:
+                builder.setFlowResult(FlowResult.newBuilder()
+                        .setTestId((int) testId)
+                        .setFlowPressure(55.0f)
+                        .build());
                 break;
             case CONCENTRATION:
-                builder.setType(CONCENTRATION_RESULT)
-                        .setConcentrationResult(ConcentrationResult.newBuilder()
-                                .setTestId(testId)
-                                .setGasConcentration(55.0)
-                                .build());
+                builder.setConcentrationResult(ConcentrationResult.newBuilder()
+                        .setTestId((int) testId)
+                        .setGasConcentration(55.0f)
+                        .build());
                 break;
-            case PRESSURE:
-                builder.setType(PRESSURE_DROP_RESULT)
-                        .setPressureDropResult(PressureDropResult.newBuilder()
-                                .setTestId(testId)
-                                .setPressureDrop(55.0)
-                                .build());
+            case PRESSURE_DROP:
+                builder.setPressureDropResult(PressureDropResult.newBuilder()
+                        .setTestId((int) testId)
+                        .setPressureDrop(5.0f)
+                        .build());
+                break;
+            case GAS_ZERO:
+                builder.setGasZeroResult(NSTProtos.Command.GasZeroResult.newBuilder()
+                        .setSuccess(true)
+                        .setCo2(100)
+                        .setN2(100)
+                        .setN2O(100)
+                        .setO2(100)
+                        .build());
+                break;
+            case SENSOR_ZERO:
+                builder.setSensorZeroResult(NSTProtos.Command.SensorZeroResult.newBuilder()
+                        .setSuccess(true)
+                        .setFlow(100)
+                        .setPressure(100)
+                        .setVacuum(-100)
+                        .build());
+                break;
+
+            case CANCEL:
+                builder.setCancel(Cancel.newBuilder()
+                        .build());
                 break;
         }
+
         NSTProtos.Command command = builder.build();
-        mConversationArrayAdapter.add("SEND " + command.getType().toString() + " for testID: " + testId);
+        mConversationArrayAdapter.add("SEND " + command.getTypeOneofCase().toString() + " for testID: " + testId);
         bluetoothService.write(command);
     }
 
@@ -256,18 +297,29 @@ public class MainActivity extends AppCompatActivity {
                     NSTProtos.Command command = (NSTProtos.Command) msg.obj;
 
 
-                    switch (command.getType()) {
+                    switch (command.getTypeOneofCase()) {
                         case FLOW_TEST:
                             testId = command.getFlowTest().getTestId();
                             break;
                         case PRESSURE_DROP_TEST:
+                            testId = command.getPressureDropTest().getTestId();
                             break;
                         case CONCENTRATION_TEST:
+                            testId = command.getConcentrationTest().getTestId();
+                            break;
+                        case GAS_TEST:
+                            testId = command.getGasTest().getTestId();
+                            break;
+                        case TRANSIENT_FLOW_TEST:
+                            testId = command.getTransientFlowTest().getTestId();
+                            break;
+                        case STATIC_PRESSURE_TEST:
+                            testId = command.getStaticPressureTest().getTestId();
                             break;
 
                     }
                     // construct a string from the valid bytes in the buffer
-                    mConversationArrayAdapter.add("RECEIVE " + command.getType().toString() + " for testID: " + testId);
+                    mConversationArrayAdapter.add("RECEIVE " + command.getTypeOneofCase().toString() + " for testID: " + testId);
 
                     break;
                 case Constants.MESSAGE_DEVICE_NAME:
