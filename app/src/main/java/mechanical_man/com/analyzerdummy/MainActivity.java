@@ -1,5 +1,6 @@
 package mechanical_man.com.analyzerdummy;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
@@ -188,13 +189,13 @@ public class MainActivity extends AppCompatActivity {
             .setTestId((int) testId)
             .setDetectedGas(N2)
             .build());
+        break;
 
       case STATIC_PRESSURE:
         builder.setStaticPressureResult(StaticPressureResult.newBuilder()
             .setTestId((int) testId)
             .setStaticPressure(55.0f)
             .build());
-
         break;
 
       case FLOW_RATE:
@@ -249,7 +250,8 @@ public class MainActivity extends AppCompatActivity {
         break;
 
       case CANCEL:
-        builder.setCancel(Cancel.newBuilder()
+        builder.setCancelResult(NSTProtos.Command.CancelResult.newBuilder()
+            .setSuccess(true)
             .build());
         break;
     }
@@ -280,8 +282,9 @@ public class MainActivity extends AppCompatActivity {
   /**
    * The Handler that gets information back from the BluetoothChatService
    */
+  @SuppressLint("HandlerLeak")
   private final Handler mHandler = new Handler() {
-    @Override
+    @SuppressLint("HandlerLeak") @Override
     public void handleMessage(Message msg) {
       AppCompatActivity activity = MainActivity.this;
       switch (msg.what) {
@@ -320,8 +323,11 @@ public class MainActivity extends AppCompatActivity {
             case CONCENTRATION_TEST:
               testId = command.getConcentrationTest().getTestId();
               break;
-            case GAS_TEST:
-              testId = command.getGasTest().getTestId();
+            case EXPECTED_GAS_TEST:
+              testId = command.getExpectedGasTest().getTestId();
+              break;
+            case DETECTED_GAS_TEST:
+              testId = command.getDetectedGasTest().getTestId();
               break;
             case TRANSIENT_FLOW_TEST:
               testId = command.getTransientFlowTest().getTestId();
