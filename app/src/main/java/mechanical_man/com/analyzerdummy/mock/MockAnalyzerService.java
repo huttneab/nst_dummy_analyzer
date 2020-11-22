@@ -75,12 +75,14 @@ public class MockAnalyzerService {
 
     public NSTProtos.Command getResponseForCommand(NSTProtos.Command command) {
         switch (command.getTypeOneofCase()) {
+            case EXPECTED_GAS_TEST:
+                return getResponse(MockExpectedGasResponse.class).response;
+            case DETECTED_GAS_TEST:
+                return getResponse(MockDetectedGasResponse.class).response;
             case FLOW_TEST:
                 return getResponse(MockFlowPressureResponse.class).response;
             case CONCENTRATION_TEST:
                 return getResponse(MockConcentrationResponse.class).response;
-            case GAS_TEST:
-                return getResponse(MockGasDetectionResponse.class).response;
             case PRESSURE_DROP_TEST:
                 return getResponse(MockPressureDropResponse.class).response;
             case TRANSIENT_FLOW_TEST:

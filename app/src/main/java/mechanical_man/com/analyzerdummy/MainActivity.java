@@ -20,9 +20,13 @@ import butterknife.OnClick;
 import com.mechanical_man.nst_proto.NSTProtos;
 import com.mechanical_man.nst_proto.NSTProtos.Command.Cancel;
 import com.mechanical_man.nst_proto.NSTProtos.Command.ConcentrationResult;
+import com.mechanical_man.nst_proto.NSTProtos.Command.DetectedGasResult;
+import com.mechanical_man.nst_proto.NSTProtos.Command.ExpectedGasResult;
 import com.mechanical_man.nst_proto.NSTProtos.Command.FlowResult;
-import com.mechanical_man.nst_proto.NSTProtos.Command.GasResult;
+import com.mechanical_man.nst_proto.NSTProtos.Command.GasZeroResult;
 import com.mechanical_man.nst_proto.NSTProtos.Command.PressureDropResult;
+import com.mechanical_man.nst_proto.NSTProtos.Command.ReadGasResult;
+import com.mechanical_man.nst_proto.NSTProtos.Command.SensorZeroResult;
 import com.mechanical_man.nst_proto.NSTProtos.Command.StaticPressureResult;
 import com.mechanical_man.nst_proto.NSTProtos.Command.TransientFlowResult;
 import mechanical_man.com.analyzerdummy.util.EnumAdapter;
@@ -172,13 +176,19 @@ public class MainActivity extends AppCompatActivity {
     NSTProtos.Command.Builder builder = NSTProtos.Command.newBuilder();
 
     switch ((ResponseEnum) resultSpinner.getSelectedItem()) {
-      case GAS_DETECTION:
-        builder.setGasResult(GasResult.newBuilder()
+      case EXPECTED_GAS:
+        builder.setExpectedGasResult(ExpectedGasResult.newBuilder()
             .setTestId((int) testId)
-            .setDetectedGas(N2)
             .setExpectedGas(N2)
             .build());
         break;
+
+      case DETECTED_GAS:
+        builder.setDetectedGasResult(DetectedGasResult.newBuilder()
+            .setTestId((int) testId)
+            .setDetectedGas(N2)
+            .build());
+
       case STATIC_PRESSURE:
         builder.setStaticPressureResult(StaticPressureResult.newBuilder()
             .setTestId((int) testId)
@@ -186,32 +196,37 @@ public class MainActivity extends AppCompatActivity {
             .build());
 
         break;
-      case TRANSIENT_FLOW:
-        builder.setTransientFlowResult(TransientFlowResult.newBuilder()
-            .setTestId((int) testId)
-            .setTransientFlow(55.0f)
-            .build());
-        break;
+
       case FLOW_RATE:
         builder.setFlowResult(FlowResult.newBuilder()
             .setTestId((int) testId)
             .setFlowPressure(55.0f)
             .build());
         break;
-      case CONCENTRATION:
-        builder.setConcentrationResult(ConcentrationResult.newBuilder()
-            .setTestId((int) testId)
-            .setGasConcentration(55.0f)
-            .build());
-        break;
+
       case PRESSURE_DROP:
         builder.setPressureDropResult(PressureDropResult.newBuilder()
             .setTestId((int) testId)
             .setPressureDrop(5.0f)
             .build());
         break;
+
+      case TRANSIENT_FLOW:
+        builder.setTransientFlowResult(TransientFlowResult.newBuilder()
+            .setTestId((int) testId)
+            .setTransientFlow(55.0f)
+            .build());
+        break;
+
+      case CONCENTRATION:
+        builder.setConcentrationResult(ConcentrationResult.newBuilder()
+            .setTestId((int) testId)
+            .setGasConcentration(55.0f)
+            .build());
+        break;
+
       case GAS_ZERO:
-        builder.setGasZeroResult(NSTProtos.Command.GasZeroResult.newBuilder()
+        builder.setGasZeroResult(GasZeroResult.newBuilder()
             .setSuccess(true)
             .setCo2(100)
             .setN2(100)
@@ -220,12 +235,17 @@ public class MainActivity extends AppCompatActivity {
             .build());
         break;
       case SENSOR_ZERO:
-        builder.setSensorZeroResult(NSTProtos.Command.SensorZeroResult.newBuilder()
+        builder.setSensorZeroResult(SensorZeroResult.newBuilder()
             .setSuccess(true)
             .setFlow(100)
             .setPressure(100)
             .setVacuum(-100)
             .build());
+        break;
+
+      case READ_GAS:
+        builder.setReadGasResult(ReadGasResult.newBuilder()
+            .setO2(100).setCo2(100).setN2(100).setN2O(100).build());
         break;
 
       case CANCEL:
