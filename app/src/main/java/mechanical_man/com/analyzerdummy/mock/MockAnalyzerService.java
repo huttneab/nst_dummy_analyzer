@@ -8,24 +8,25 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import io.reactivex.subjects.BehaviorSubject;
-import mechanical_man.com.analyzerdummy.mock.MockResponses.MockCalibrationDateResponse;
-import mechanical_man.com.analyzerdummy.mock.MockResponses.MockCancelResponse;
-import mechanical_man.com.analyzerdummy.mock.MockResponses.MockConcentrationResponse;
-import mechanical_man.com.analyzerdummy.mock.MockResponses.MockFlowPressureResponse;
-import mechanical_man.com.analyzerdummy.mock.MockResponses.MockGasDetectionResponse;
-import mechanical_man.com.analyzerdummy.mock.MockResponses.MockGasZeroResponse;
-import mechanical_man.com.analyzerdummy.mock.MockResponses.MockPressureDropResponse;
-import mechanical_man.com.analyzerdummy.mock.MockResponses.MockReadFlowResponse;
-import mechanical_man.com.analyzerdummy.mock.MockResponses.MockReadGasResponse;
-import mechanical_man.com.analyzerdummy.mock.MockResponses.MockReadPressureResponse;
-import mechanical_man.com.analyzerdummy.mock.MockResponses.MockReadVacuumResponse;
-import mechanical_man.com.analyzerdummy.mock.MockResponses.MockSensorZeroResponse;
-import mechanical_man.com.analyzerdummy.mock.MockResponses.MockSpanFlowResponse;
-import mechanical_man.com.analyzerdummy.mock.MockResponses.MockSpanGasResponse;
-import mechanical_man.com.analyzerdummy.mock.MockResponses.MockSpanPressureResponse;
-import mechanical_man.com.analyzerdummy.mock.MockResponses.MockSpanVacuumResponse;
-import mechanical_man.com.analyzerdummy.mock.MockResponses.MockStaticPressureResponse;
-import mechanical_man.com.analyzerdummy.mock.MockResponses.MockTransientFlowResponse;
+import mechanical_man.com.analyzerdummy.mock.responses.MockCalibrationDateResponse;
+import mechanical_man.com.analyzerdummy.mock.responses.MockCancelResponse;
+import mechanical_man.com.analyzerdummy.mock.responses.MockConcentrationResponse;
+import mechanical_man.com.analyzerdummy.mock.responses.MockDetectedGasDetectionResponse;
+import mechanical_man.com.analyzerdummy.mock.responses.MockFlowPressureResponse;
+import mechanical_man.com.analyzerdummy.mock.responses.MockExpectedGasDetectionResponse;
+import mechanical_man.com.analyzerdummy.mock.responses.MockGasZeroResponse;
+import mechanical_man.com.analyzerdummy.mock.responses.MockPressureDropResponse;
+import mechanical_man.com.analyzerdummy.mock.responses.MockReadFlowResponse;
+import mechanical_man.com.analyzerdummy.mock.responses.MockReadGasResponse;
+import mechanical_man.com.analyzerdummy.mock.responses.MockReadPressureResponse;
+import mechanical_man.com.analyzerdummy.mock.responses.MockReadVacuumResponse;
+import mechanical_man.com.analyzerdummy.mock.responses.MockSensorZeroResponse;
+import mechanical_man.com.analyzerdummy.mock.responses.MockSpanFlowResponse;
+import mechanical_man.com.analyzerdummy.mock.responses.MockSpanGasResponse;
+import mechanical_man.com.analyzerdummy.mock.responses.MockSpanPressureResponse;
+import mechanical_man.com.analyzerdummy.mock.responses.MockSpanVacuumResponse;
+import mechanical_man.com.analyzerdummy.mock.responses.MockStaticPressureResponse;
+import mechanical_man.com.analyzerdummy.mock.responses.MockTransientFlowResponse;
 import mechanical_man.com.analyzerdummy.util.EnumPreferences;
 
 /**
@@ -54,7 +55,7 @@ public class MockAnalyzerService {
 
         loadResponse(MockFlowPressureResponse.class, MockFlowPressureResponse.SUCCESS);
         loadResponse(MockConcentrationResponse.class, MockConcentrationResponse.SUCCESS);
-        loadResponse(MockGasDetectionResponse.class, MockGasDetectionResponse.SUCCESS);
+        loadResponse(MockExpectedGasDetectionResponse.class, MockExpectedGasDetectionResponse.SUCCESS);
         loadResponse(MockPressureDropResponse.class, MockPressureDropResponse.SUCCESS);
         loadResponse(MockTransientFlowResponse.class, MockTransientFlowResponse.SUCCESS);
         loadResponse(MockStaticPressureResponse.class, MockStaticPressureResponse.SUCCESS);
@@ -75,12 +76,14 @@ public class MockAnalyzerService {
 
     public NSTProtos.Command getResponseForCommand(NSTProtos.Command command) {
         switch (command.getTypeOneofCase()) {
+            case EXPECTED_GAS_TEST:
+                return getResponse(MockExpectedGasDetectionResponse.class).response;
+            case DETECTED_GAS_TEST:
+                return getResponse(MockDetectedGasDetectionResponse.class).getResponse();
             case FLOW_TEST:
                 return getResponse(MockFlowPressureResponse.class).response;
             case CONCENTRATION_TEST:
                 return getResponse(MockConcentrationResponse.class).response;
-            case GAS_TEST:
-                return getResponse(MockGasDetectionResponse.class).response;
             case PRESSURE_DROP_TEST:
                 return getResponse(MockPressureDropResponse.class).response;
             case TRANSIENT_FLOW_TEST:
