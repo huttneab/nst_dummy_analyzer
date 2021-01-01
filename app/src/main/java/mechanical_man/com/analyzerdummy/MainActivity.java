@@ -19,17 +19,27 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.mechanical_man.nst_proto.NSTProtos;
-import com.mechanical_man.nst_proto.NSTProtos.Command.Cancel;
+import com.mechanical_man.nst_proto.NSTProtos.Command.AnalyzerInfoResult;
+import com.mechanical_man.nst_proto.NSTProtos.Command.BatteryInfoResult;
+import com.mechanical_man.nst_proto.NSTProtos.Command.CalibrationDateResult;
 import com.mechanical_man.nst_proto.NSTProtos.Command.ConcentrationResult;
 import com.mechanical_man.nst_proto.NSTProtos.Command.DetectedGasResult;
 import com.mechanical_man.nst_proto.NSTProtos.Command.ExpectedGasResult;
 import com.mechanical_man.nst_proto.NSTProtos.Command.FlowResult;
 import com.mechanical_man.nst_proto.NSTProtos.Command.GasZeroResult;
 import com.mechanical_man.nst_proto.NSTProtos.Command.PressureDropResult;
+import com.mechanical_man.nst_proto.NSTProtos.Command.ReadFlowResult;
 import com.mechanical_man.nst_proto.NSTProtos.Command.ReadGasResult;
+import com.mechanical_man.nst_proto.NSTProtos.Command.ReadVacuumResult;
+import com.mechanical_man.nst_proto.NSTProtos.Command.ResetResult;
 import com.mechanical_man.nst_proto.NSTProtos.Command.SensorZeroResult;
+import com.mechanical_man.nst_proto.NSTProtos.Command.SpanGasResult;
+import com.mechanical_man.nst_proto.NSTProtos.Command.SpanPressureResult;
+import com.mechanical_man.nst_proto.NSTProtos.Command.SpanVacuumResult;
 import com.mechanical_man.nst_proto.NSTProtos.Command.StaticPressureResult;
 import com.mechanical_man.nst_proto.NSTProtos.Command.TransientFlowResult;
+import com.mechanical_man.nst_proto.NSTProtos.Command.VACFlowResult;
+import com.mechanical_man.nst_proto.NSTProtos.Command.VACPressureResult;
 import mechanical_man.com.analyzerdummy.util.EnumAdapter;
 
 import static com.mechanical_man.nst_proto.NSTProtos.Command.Gas.N2;
@@ -246,7 +256,73 @@ public class MainActivity extends AppCompatActivity {
 
       case READ_GAS:
         builder.setReadGasResult(ReadGasResult.newBuilder()
-            .setO2(100).setCo2(100).setN2(100).setN2O(100).build());
+            .setO2(100)
+            .setCo2(100)
+            .setN2(100)
+            .setN2O(100)
+            .build());
+        break;
+
+      case SPAN_GAS:
+        builder.setSpanGasResult(SpanGasResult.newBuilder()
+            .setSuccess(true)
+            .build());
+        break;
+
+      case READ_FLOW:
+        builder.setReadFlowResult(ReadFlowResult.newBuilder()
+            .setFlow(100)
+            .setSuccess(true)
+            .build());
+        break;
+
+      case SPAN_FLOW:
+        builder.setSpanFlowResult(
+            NSTProtos.Command.SpanFlowResult.newBuilder().setSuccess(true).build());
+        break;
+
+      case READ_PRESSURE:
+        builder.setReadPressureResult(NSTProtos.Command.ReadPressureResult.newBuilder()
+            .setPressure(100)
+            .setSuccess(true)
+            .build());
+        break;
+
+      case SPAN_PRESSURE:
+        builder.setSpanPressureResult(SpanPressureResult.newBuilder().setSuccess(true).build());
+        break;
+
+      case READ_VACUUM:
+        builder.setReadVacuumResult(
+            ReadVacuumResult.newBuilder().setVacuum(100).setSuccess(true).build());
+        break;
+      case SPAN_VACUUM:
+        builder.setSpanVacuumResult(SpanVacuumResult.newBuilder().setSuccess(true).build());
+        break;
+      case RESET:
+        builder.setResetResult(ResetResult.newBuilder().setSuccess(true).build());
+        break;
+      case CALIBRATION_DATE:
+        builder.setCalibrationDateResult(
+            CalibrationDateResult.newBuilder().setSuccess(true).build());
+        break;
+      case ANALYZER_INFO:
+        builder.setAnalyzerInfoResult(AnalyzerInfoResult.newBuilder()
+            .setCalibrationDate("Today")
+            .setFirmwareVersion("1.0")
+            .setSuccess(true)
+            .build());
+        break;
+      case VAC_PRESSURE_TEST:
+        builder.setVacPressureResult(
+            VACPressureResult.newBuilder().setTestId(1).setVacPressure(100).build());
+        break;
+      case VAC_FLOW_TEST:
+        builder.setVacFlowResult(VACFlowResult.newBuilder().setTestId(1).setVacFlow(100).build());
+        break;
+      case BATTERY_INFO:
+        builder.setBatteryInfoResult(
+            BatteryInfoResult.newBuilder().setVoltage(100).setCapacity(100).build());
         break;
 
       case CANCEL:
