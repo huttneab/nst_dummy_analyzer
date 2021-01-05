@@ -9,7 +9,7 @@ object MockDetectedGasDetection {
   val SUCCESS: Command = newBuilder()
       .setDetectedGasResult(
           DetectedGasResult.newBuilder()
-              .setTestId(1)
+              .setTestId(-1)
               .setDetectedGas(N2)
               .build()
       )

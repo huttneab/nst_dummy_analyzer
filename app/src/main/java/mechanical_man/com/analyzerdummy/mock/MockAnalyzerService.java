@@ -11,6 +11,7 @@ import io.reactivex.subjects.BehaviorSubject;
 import mechanical_man.com.analyzerdummy.mock.responses.MockCalibrationDateResponse;
 import mechanical_man.com.analyzerdummy.mock.responses.MockCancelResponse;
 import mechanical_man.com.analyzerdummy.mock.responses.MockConcentrationResponse;
+import mechanical_man.com.analyzerdummy.mock.responses.MockDetectedGasDetection;
 import mechanical_man.com.analyzerdummy.mock.responses.MockDetectedGasDetectionResponse;
 import mechanical_man.com.analyzerdummy.mock.responses.MockFlowPressureResponse;
 import mechanical_man.com.analyzerdummy.mock.responses.MockExpectedGasDetectionResponse;
@@ -56,6 +57,7 @@ public class MockAnalyzerService {
         loadResponse(MockFlowPressureResponse.class, MockFlowPressureResponse.SUCCESS);
         loadResponse(MockConcentrationResponse.class, MockConcentrationResponse.SUCCESS);
         loadResponse(MockExpectedGasDetectionResponse.class, MockExpectedGasDetectionResponse.SUCCESS);
+        loadResponse(MockDetectedGasDetectionResponse.class, MockDetectedGasDetectionResponse.SUCCESS);
         loadResponse(MockPressureDropResponse.class, MockPressureDropResponse.SUCCESS);
         loadResponse(MockTransientFlowResponse.class, MockTransientFlowResponse.SUCCESS);
         loadResponse(MockStaticPressureResponse.class, MockStaticPressureResponse.SUCCESS);
