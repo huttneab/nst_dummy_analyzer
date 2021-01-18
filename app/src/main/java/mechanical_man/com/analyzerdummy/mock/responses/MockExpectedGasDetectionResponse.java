@@ -7,7 +7,7 @@ import com.mechanical_man.nst_proto.NSTProtos;
  */
 
 public enum MockExpectedGasDetectionResponse {
-    SUCCESS("success", MockExpectedGasDetection.INSTANCE.getSUCCESS());
+    SUCCESS("success", MockExpectedGasDetection.Companion.getSUCCESS());
 
     public final String name;
     public NSTProtos.Command response;

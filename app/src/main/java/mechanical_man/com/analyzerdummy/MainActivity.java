@@ -42,7 +42,18 @@ import com.mechanical_man.nst_proto.NSTProtos.Command.VACFlowResult;
 import com.mechanical_man.nst_proto.NSTProtos.Command.VACPressureResult;
 import mechanical_man.com.analyzerdummy.util.EnumAdapter;
 
+import static com.mechanical_man.nst_proto.NSTProtos.Command.Gas.AIR;
+import static com.mechanical_man.nst_proto.NSTProtos.Command.Gas.CO2;
+import static com.mechanical_man.nst_proto.NSTProtos.Command.Gas.CO2_VALUE;
 import static com.mechanical_man.nst_proto.NSTProtos.Command.Gas.N2;
+import static com.mechanical_man.nst_proto.NSTProtos.Command.Gas.N2O;
+import static com.mechanical_man.nst_proto.NSTProtos.Command.Gas.NONE;
+import static com.mechanical_man.nst_proto.NSTProtos.Command.Gas.O2;
+import static com.mechanical_man.nst_proto.NSTProtos.Command.Gas.UNKNOWN;
+import static com.mechanical_man.nst_proto.NSTProtos.Command.Gas.VAC;
+import static com.mechanical_man.nst_proto.NSTProtos.Command.Gas.VAC_F;
+import static com.mechanical_man.nst_proto.NSTProtos.Command.Gas.WAGD;
+import static com.mechanical_man.nst_proto.NSTProtos.Command.Gas.WAGD_F;
 
 public class MainActivity extends AppCompatActivity {
   private static final String TAG = "MainActivity";
@@ -190,14 +201,14 @@ public class MainActivity extends AppCompatActivity {
       case EXPECTED_GAS:
         builder.setExpectedGasResult(ExpectedGasResult.newBuilder()
             .setTestId((int) testId)
-            .setExpectedGas(N2)
+            .setExpectedGas(AIR)
             .build());
         break;
 
       case DETECTED_GAS:
         builder.setDetectedGasResult(DetectedGasResult.newBuilder()
             .setTestId((int) testId)
-            .setDetectedGas(N2)
+            .setDetectedGas(AIR)
             .build());
         break;
 
@@ -335,6 +346,8 @@ public class MainActivity extends AppCompatActivity {
     NSTProtos.Command command = builder.build();
     mConversationArrayAdapter.add(
         "SEND " + command.getTypeOneofCase().toString() + " for testID: " + testId);
+    Log.i("MainActivity", "Sending: " + command.getTypeOneofCase().toString());
+    Log.i("MainActivity", "Command: " + command);
     bluetoothService.write(command);
   }
 
