@@ -8,159 +8,212 @@ option java_outer_classname = "NSTProtos";
 
 message Command {
 
-	enum Gas {
-		O2 = 0;
-		CO2 = 1;
-		N2 = 2;
-		N2O = 3;
-		AIR = 4;
-		VAC = 5;
-		WAGD = 6;
-		NONE = 7;
-		UNKNOWN = 8;
-	}
+    enum Gas {
+        O2 = 0;
+        CO2 = 1;
+        N2 = 2;
+        N2O = 3;
+        AIR = 4;
+        VAC = 5;
+        WAGD = 6;
+        VAC_F = 7;
+        WAGD_F = 8;
+        NONE = 9;
+        UNKNOWN = 10;
+    }
 
-	oneof type_oneof {
-		/*
+    oneof type_oneof {
+        /*
             Outlet testing commands
         */
-		GasTest gas_test = 2;
-		StaticPressureTest static_pressure_test = 3;
-		FlowTest flow_test = 4;
-		PressureDropTest pressure_drop_test = 5;
-		TransientFlowTest transient_flow_test = 6;
-		ConcentrationTest concentration_test = 7;
+        ExpectedGasTest expected_gas_test = 2;
+        DetectedGasTest detected_gas_test = 3;
+        StaticPressureTest static_pressure_test = 4;
+        FlowTest flow_test = 5;
+        PressureDropTest pressure_drop_test = 6;
+        TransientFlowTest transient_flow_test = 7;
+        ConcentrationTest concentration_test = 8;
 
-		GasResult gas_result = 8;
-		StaticPressureResult static_pressure_result = 9;
-		FlowResult flow_result = 10;
-		PressureDropResult pressure_drop_result = 11;
-		TransientFlowResult transient_flow_result = 12;
-		ConcentrationResult concentration_result = 13;
+        ExpectedGasResult expected_gas_result = 9;
+        DetectedGasResult detected_gas_result = 10;
+        StaticPressureResult static_pressure_result = 11;
+        FlowResult flow_result = 12;
+        PressureDropResult pressure_drop_result = 13;
+        TransientFlowResult transient_flow_result = 14;
+        ConcentrationResult concentration_result = 15;
 
-		/*
+        /*
             Calibration Commands
         */
-		GasZero gas_zero = 14;
-		GasZeroResult gas_zero_result = 15;
-		SensorZero sensor_zero = 16;
-		SensorZeroResult sensor_zero_result = 17;
+        GasZero gas_zero = 16;
+        GasZeroResult gas_zero_result = 17;
+        SensorZero sensor_zero = 18;
+        SensorZeroResult sensor_zero_result = 19;
 
-		ReadGas read_gas = 18;
-		ReadGasResult read_gas_result = 19;
-		SpanGas span_gas = 20;
-		SpanGasResult span_gas_result = 21;
+        ReadGas read_gas = 20;
+        ReadGasResult read_gas_result = 21;
+        SpanGas span_gas = 22;
+        SpanGasResult span_gas_result = 23;
 
-		ReadFlow read_flow = 22;
-		ReadFlowResult read_flow_result = 23;
-		SpanFlow span_flow = 24;
-		SpanFlowResult span_flow_result = 25;
+        ReadFlow read_flow = 24;
+        ReadFlowResult read_flow_result = 25;
+        SpanFlow span_flow = 26;
+        SpanFlowResult span_flow_result = 27;
 
-		ReadPressure read_pressure = 26;
-		ReadPressureResult read_pressure_result = 27;
-		SpanPressure span_pressure = 28;
-		SpanPressureResult span_pressure_result = 29;
+        ReadPressure read_pressure = 28;
+        ReadPressureResult read_pressure_result = 29;
+        SpanPressure span_pressure = 30;
+        SpanPressureResult span_pressure_result = 31;
 
-		ReadVacuum read_vacuum = 30;
-		ReadVacuumResult read_vacuum_result = 31;
-		SpanVacuum span_vacuum = 32;
-		SpanVacuumResult span_vacuum_result = 33;
+        ReadVacuum read_vacuum = 32;
+        ReadVacuumResult read_vacuum_result = 33;
+        SpanVacuum span_vacuum = 34;
+        SpanVacuumResult span_vacuum_result = 35;
 
-		// General Commands
-		Reset reset = 34;
-		ResetResult reset_result = 35;
+        // General Commands
+        Reset reset = 36;
+        ResetResult reset_result = 37;
 
-		Cancel cancel = 36;
-		CancelResult cancel_result = 37;
+        Cancel cancel = 38;
+        CancelResult cancel_result = 39;
 
-		CalibrationDate calibration_date = 38;
-		CalibrationDateResult calibration_date_result = 39;
+        CalibrationDate calibration_date = 40;
+        CalibrationDateResult calibration_date_result = 41;
 
-		AnalyzerInfo analyzer_info = 40;
-		AnalyzerInfoResult analyzer_info_result = 41;
+        AnalyzerInfo analyzer_info = 42;
+        AnalyzerInfoResult analyzer_info_result = 43;
 
-	}
+        // VAC and WAGD Commands
+        VACPressureTest vac_pressure_test = 44;
+        VACFlowTest vac_flow_test = 45;
 
-	/*
+        VACPressureResult vac_pressure_result = 46;
+        VACFlowResult vac_flow_result = 47;
+
+        // Battery Command
+        BatteryInfo battery_info = 48;
+        BatteryInfoResult battery_info_result = 49;
+
+    }
+
+    /*
         ------------------------------------------------------------------------------------
 
         Outlet testing commands
 
         ------------------------------------------------------------------------------------
     */
-	message GasTest {
-		int32 test_id = 1;
-	}
+    message ExpectedGasTest {
+        int32 test_id = 1;
+    }
 
-	message StaticPressureTest {
-		int32 test_id = 1;
-	}
+    message DetectedGasTest {
+        int32 test_id = 1;
+    }
 
-	message FlowTest {
-		int32 test_id = 1;
+    message StaticPressureTest {
+        int32 test_id = 1;
+    }
 
-		float default_test_flow_o2 = 2;
-		float default_test_flow_n2o = 3;
-		float default_test_flow_air = 4;
-		float default_test_flow_co2 = 5;
-		float default_test_flow_n2 = 6;
-		float default_test_flow_vac = 7;
-		float default_test_flow_wagd = 8;
-	}
+    message VACPressureTest {
+        int32 test_id = 1;
+    }
 
-	message PressureDropTest {
-		int32 test_id = 1;
-	}
+    message VACFlowTest{
+        int32 test_id = 1;
+    }
 
-	message TransientFlowTest {
-		int32 test_id = 1;
+    message FlowTest {
+        int32 test_id = 1;
 
-		float default_test_flow_o2 = 2;
-		float default_test_flow_air = 3;
-	}
+        float default_test_flow_o2 = 2;
+        float default_test_flow_n2o = 3;
+        float default_test_flow_air = 4;
+        float default_test_flow_co2 = 5;
+        float default_test_flow_n2 = 6;
+        float default_test_flow_vac = 7;
+        float default_test_flow_wagd = 8;
+    }
 
-	message ConcentrationTest {
-		int32 test_id = 1;
-	}
+    message PressureDropTest {
+        int32 test_id = 1;
+    }
 
-	message GasResult {
-		int32 test_id = 1;
+    message TransientFlowTest {
+        int32 test_id = 1;
 
-		Gas expected_gas = 2;
-		Gas detected_gas = 3;
-	}
+        float default_test_flow_o2 = 2;
+        float default_test_flow_air = 3;
 
-	message StaticPressureResult {
-		int32 test_id = 1;
+        // the rest of these are not really used and just set to dummy values of 0
+        // this tricks the analyzer into not performing the test for these gasses (which it shouldn't)
+        float default_test_flow_n2o = 4;
+        float default_test_flow_co2 = 5;
+        float default_test_flow_n2 = 6;
+        float default_test_flow_vac = 7;
+        float default_test_flow_wagd = 8;
+    }
 
-		float static_pressure = 2;
-	}
+    message ConcentrationTest {
+        int32 test_id = 1;
+    }
 
-	message FlowResult {
-		int32 test_id = 1;
+    message ExpectedGasResult {
+        int32 test_id = 1;
 
-		float flow_pressure = 3;
-	}
+        Gas expected_gas = 2;
+    }
 
-	message PressureDropResult {
-		int32 test_id = 1;
+    message DetectedGasResult {
+        int32 test_id = 1;
 
-		float pressure_drop = 2;
-	}
+        Gas detected_gas = 2;
+    }
 
-	message TransientFlowResult {
-		int32 test_id = 1;
+    message StaticPressureResult {
+        int32 test_id = 1;
 
-		float transient_flow = 2;
-	}
+        float static_pressure = 2;
+    }
 
-	message ConcentrationResult {
-		int32 test_id = 1;
+    message VACPressureResult {
+        int32 test_id = 1;
 
-		float gas_concentration = 2;
-	}
+        float vac_pressure = 2;
+    }
 
-	/*
+    message VACFlowResult {
+        int32 test_id = 1;
+
+        float vac_flow = 2;
+    }
+
+    message FlowResult {
+        int32 test_id = 1;
+
+        float flow_pressure = 2;
+        float flow_rate = 3;
+    }
+
+    message PressureDropResult {
+        int32 test_id = 1;
+
+        float pressure_drop = 2;
+    }
+
+    message TransientFlowResult {
+        int32 test_id = 1;
+
+        float transient_flow = 2;
+    }
+
+    message ConcentrationResult {
+        int32 test_id = 1;
+
+        float gas_concentration = 2;
+    }
+
+    /*
         ------------------------------------------------------------------------------------
         Calibration commands
 
@@ -169,128 +222,128 @@ message Command {
         ------------------------------------------------------------------------------------
     */
 
-	/*
+    /*
         Request the analyzer to read the raw gas concentration values for the current outlet
     */
-	message ReadGas {
+    message ReadGas {
 
-	}
+    }
 
-	/*
+    /*
         Return the gas concentration value
     */
-	message ReadGasResult {
-		bool success = 1;
+    message ReadGasResult {
+        bool success = 1;
 
-		float o2 = 2;
-		float co2 = 3;
-		float n2 = 4;
-		float n2o = 5;
-	}
+        float o2 = 2;
+        float co2 = 3;
+        float n2 = 4;
+        float n2o = 5;
+    }
 
-	message SpanGas {
-		Gas gas = 1;
-		float span_value = 2;
-	}
+    message SpanGas {
+        Gas gas = 1;
+        float span_value = 2;
+    }
 
-	message SpanGasResult {
-		bool success = 1;
-	}
+    message SpanGasResult {
+        bool success = 1;
+    }
 
-	/*
+    /*
         Request the analyzer to read the raw flow value for the current outlet
     */
-	message ReadFlow {
+    message ReadFlow {
 
-	}
+    }
 
-	message ReadFlowResult {
-		bool success = 1;
+    message ReadFlowResult {
+        bool success = 1;
 
-		float flow = 2;
-	}
+        float flow = 2;
+    }
 
-	message SpanFlow {
-		float span_value = 1;
-	}
+    message SpanFlow {
+        float span_value = 1;
+    }
 
-	message SpanFlowResult {
-		bool success = 1;
-	}
+    message SpanFlowResult {
+        bool success = 1;
+    }
 
-	/*
+    /*
         Request the analyzer to read the raw pressure value for the current outlet.
     */
-	message ReadPressure {
-	}
+    message ReadPressure {
+    }
 
-	message ReadPressureResult {
-		bool success = 1;
+    message ReadPressureResult {
+        bool success = 1;
 
-		float pressure = 2;
-	}
+        float pressure = 2;
+    }
 
-	message SpanPressure {
-		float span_value = 1;
-	}
+    message SpanPressure {
+        float span_value = 1;
+    }
 
-	message SpanPressureResult {
-		bool success = 1;
-	}
+    message SpanPressureResult {
+        bool success = 1;
+    }
 
-	/*
+    /*
         Request the analyzer to read the raw vacuum value for the current outlet.
     */
-	message ReadVacuum {
+    message ReadVacuum {
 
-	}
+    }
 
-	message ReadVacuumResult {
-		bool success = 1;
+    message ReadVacuumResult {
+        bool success = 1;
 
-		float vacuum = 2;
-	}
+        float vacuum = 2;
+    }
 
-	message SpanVacuum {
-		float span_value = 1;
-	}
+    message SpanVacuum {
+        float span_value = 1;
+    }
 
-	message SpanVacuumResult {
-		bool success = 1;
-	}
+    message SpanVacuumResult {
+        bool success = 1;
+    }
 
-	message CalibrationDate {
-		string calibration_date = 1;
-	}
+    message CalibrationDate {
+        string calibration_date = 1;
+    }
 
-	message CalibrationDateResult {
-		bool success = 1;
-	}
+    message CalibrationDateResult {
+        bool success = 1;
+    }
 
-	message GasZero {
-	}
+    message GasZero {
+    }
 
-	message GasZeroResult {
-		bool success = 1;
+    message GasZeroResult {
+        bool success = 1;
 
-		float o2 = 2;
-		float co2 = 3;
-		float n2 = 4;
-		float n2o = 5;
-	}
+        float o2 = 2;
+        float co2 = 3;
+        float n2 = 4;
+        float n2o = 5;
+    }
 
-	message SensorZero {
-	}
+    message SensorZero {
+    }
 
-	message SensorZeroResult {
-		bool success = 1;
+    message SensorZeroResult {
+        bool success = 1;
 
-		float pressure = 2;
-		float flow = 3;
-		float vacuum = 4;
-	}
+        float pressure = 2;
+        float flow = 3;
+        float vacuum = 4;
+    }
 
-	/*
+    /*
         ------------------------------------------------------------------------------------
 
         General Commands
@@ -298,29 +351,36 @@ message Command {
         ------------------------------------------------------------------------------------
     */
 
-	message Reset {
+    message Reset {
 
-	}
+    }
 
-	message ResetResult {
-		bool success = 1;
-	}
+    message ResetResult {
+        bool success = 1;
+    }
 
-	message Cancel {
-	}
+    message Cancel {
+    }
 
-	message CancelResult {
-		bool success = 1;
-	}
+    message CancelResult {
+        bool success = 1;
+    }
 
-	message AnalyzerInfo {
-	}
+    message AnalyzerInfo {
+    }
 
-	message AnalyzerInfoResult {
-		bool success = 1;
+    message AnalyzerInfoResult {
+        bool success = 1;
 
-		string calibration_date = 2;
-		string firmware_version = 3;
-		string battery = 4;
-	}
+        string calibration_date = 2;
+        string firmware_version = 3;
+    }
+
+    message BatteryInfo {
+    }
+
+    message BatteryInfoResult {
+        float voltage = 1;
+        float capacity = 2;
+    }
 }
