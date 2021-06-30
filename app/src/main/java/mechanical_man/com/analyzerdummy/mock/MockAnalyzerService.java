@@ -1,6 +1,7 @@
 package mechanical_man.com.analyzerdummy.mock;
 
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.mechanical_man.nst_proto.NSTProtos;
 
@@ -11,10 +12,9 @@ import io.reactivex.subjects.BehaviorSubject;
 import mechanical_man.com.analyzerdummy.mock.responses.MockCalibrationDateResponse;
 import mechanical_man.com.analyzerdummy.mock.responses.MockCancelResponse;
 import mechanical_man.com.analyzerdummy.mock.responses.MockConcentrationResponse;
-import mechanical_man.com.analyzerdummy.mock.responses.MockDetectedGasDetection;
 import mechanical_man.com.analyzerdummy.mock.responses.MockDetectedGasDetectionResponse;
-import mechanical_man.com.analyzerdummy.mock.responses.MockFlowPressureResponse;
 import mechanical_man.com.analyzerdummy.mock.responses.MockExpectedGasDetectionResponse;
+import mechanical_man.com.analyzerdummy.mock.responses.MockFlowPressureResponse;
 import mechanical_man.com.analyzerdummy.mock.responses.MockGasZeroResponse;
 import mechanical_man.com.analyzerdummy.mock.responses.MockPressureDropResponse;
 import mechanical_man.com.analyzerdummy.mock.responses.MockReadFlowResponse;
@@ -79,8 +79,10 @@ public class MockAnalyzerService {
     public NSTProtos.Command getResponseForCommand(NSTProtos.Command command) {
         switch (command.getTypeOneofCase()) {
             case EXPECTED_GAS_TEST:
-                return getResponse(MockExpectedGasDetectionResponse.class).response;
+                Log.d(MockAnalyzerService.class.getCanonicalName(), "Expected Gas: " + getResponse(MockExpectedGasDetectionResponse.class).getResponse());
+                return getResponse(MockExpectedGasDetectionResponse.class).getResponse();
             case DETECTED_GAS_TEST:
+                Log.d(MockAnalyzerService.class.getCanonicalName(), "Detected Gas: " + getResponse(MockDetectedGasDetectionResponse.class).getResponse());
                 return getResponse(MockDetectedGasDetectionResponse.class).getResponse();
             case FLOW_TEST:
                 return getResponse(MockFlowPressureResponse.class).response;

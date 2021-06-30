@@ -201,14 +201,14 @@ public class MainActivity extends AppCompatActivity {
       case EXPECTED_GAS:
         builder.setExpectedGasResult(ExpectedGasResult.newBuilder()
             .setTestId((int) testId)
-            .setExpectedGas(AIR)
+            .setExpectedGas(O2)
             .build());
         break;
 
       case DETECTED_GAS:
         builder.setDetectedGasResult(DetectedGasResult.newBuilder()
             .setTestId((int) testId)
-            .setDetectedGas(AIR)
+            .setDetectedGas(O2)
             .build());
         break;
 
